@@ -13,6 +13,8 @@ class Player(object):
         self.proTeam = PRO_TEAM_MAP[json_parsing(data, 'proTeamId')]
         self.injuryStatus = json_parsing(data, 'injuryStatus')
         self.stats = {}
+        self.unfilteredTotal = {}
+        self.unfilteredAvg = {}
 
         # add available stats
 
@@ -25,12 +27,13 @@ class Player(object):
             if split['stats']:
                 self.stats[split['id']] = {}
                 if 'averageStats' in split.keys():
+                    self.unfilteredTotal = split['stats']
+                    self.unfilteredAvg = split['averageStats']
                     self.stats[split['id']]['avg'] = {STATS_MAP[i]: split['averageStats'][i] for i in split['averageStats'].keys() if STATS_MAP[i] != ''}
                     self.stats[split['id']]['total'] = {STATS_MAP[i]: split['stats'][i] for i in split['stats'].keys() if STATS_MAP[i] != ''}
                 else:
                     self.stats[split['id']]['avg'] = None
                     self.stats[split['id']]['total'] = None
-            
+
     def __repr__(self):
         return 'Player(%s)' % (self.name, )
-        
